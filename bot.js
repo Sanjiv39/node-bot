@@ -68,3 +68,5 @@ bot.onText(/.+/, (msg, match) => {
     // console.log(msg)
     bot.sendMessage(chatID, `${userstatsHtml}\n\nMessage --> <code>${msg.text}</code>`, {parse_mode: 'HTML'})
 })
+
+module.exports = {bot}
