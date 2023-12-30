@@ -1,5 +1,5 @@
 // TOKEN - 6794312088:AAGYiSsNY3LS--eUuY9bqLTcOCYPqY-WKWI
-const fs = require('fs')
+// const fs = require('fs')
 const TelegramBot = require('node-telegram-bot-api');
 
 // replace the value below with the Telegram token you receive from @BotFather
@@ -49,7 +49,6 @@ const getStats = (chatid, fname, lname, username) => {
     return [userstats, userstatsHtml]
 }
 
-fs.appendFileSync('./logs.txt', `${get_date()}Bot Process ID : ${process.pid}`)
 bot.sendMessage(chatID, `Bot Process ID : <code>${process.pid}</code>`, { parse_mode: 'HTML' })
 
 // Start -------------------------------------------------------------------------------------------
