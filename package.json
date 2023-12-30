@@ -9,7 +9,7 @@
     "pm2": "^5.3.0"
   },
   "scripts": {
-    "start": "pm2 bot.js"
+    "start": "pm2 start bot.js"
   },
   "author": "Sanjiv39",
   "license": "ISC"
