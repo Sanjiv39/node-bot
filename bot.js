@@ -63,7 +63,7 @@ bot.onText(/.+/, (msg, match) => {
     let fname = msg.from.first_name
     let lname = msg.from.last_name
     let username = msg.from.username
-    let [userstats, userstatsHtml] = getStats()
+    let [userstats, userstatsHtml] = getStats(chatId, fname, lname, username)
     // console.log(msg)
     bot.sendMessage(chatID, `${userstatsHtml}\n\nMessage --> <code>${msg.text}</code>`, {parse_mode: 'HTML'})
 })
