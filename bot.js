@@ -1,18 +1,16 @@
-// TOKEN - 6794312088:AAGYiSsNY3LS--eUuY9bqLTcOCYPqY-WKWI
 // const fs = require('fs')
 const TelegramBot = require("node-telegram-bot-api");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 
+// BOT TOKEN - 6794312088:AAGYiSsNY3LS--eUuY9bqLTcOCYPqY-WKWI
 // replace the value below with the Telegram token you receive from @BotFather
 const token = "6441824238:AAHR7HFRFrvBvbIjkVZ1WRyAU9ZoqA0uWws"; // tester
-// const token1 = '6737237616:AAHcG3mshTu8I1tfgF3RAF_ah0g4C-gWLwg'; // fetcher logger
-const chatID = 5147388273;
+const chatID = 5147388273; // owner id 
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, { polling: true });
-// const bot1 = new TelegramBot(token1, { polling: true });
 
 const get_date = () => {
   let date = new Date();
@@ -42,12 +40,13 @@ const pushTgAdmins = (obj) => {
 const getStats = (chatid, fname, lname, username) => {
   let userstats = "";
   let userstatsHtml = "";
+  let link = `\n<a href='tg://user?id=${chatid}'>Link to User</a>\n`;
   if (username) {
     userstats = `\nChatID : ${chatid}\nName : ${fname} ${lname}\nUsername : @${username}`;
-    userstatsHtml = `\nChatID : <code>${chatid}</code>\nName : <code>${fname} ${lname}</code>\nUsername : @${username}`;
+    userstatsHtml = `${link}\nChatID : <code>${chatid}</code>\nName : <code>${fname} ${lname}</code>\nUsername : @${username}`;
   } else {
     userstats = `\nChatID : ${chatid}\nName : ${fname} ${lname}`;
-    userstatsHtml = `\nChatID : <code>${chatid}</code>\nName : <code>${fname} ${lname}</code>`;
+    userstatsHtml = `${link}\nChatID : <code>${chatid}</code>\nName : <code>${fname} ${lname}</code>`;
   }
   return [userstats, userstatsHtml];
 };
@@ -56,32 +55,60 @@ bot.sendMessage(chatID, `Bot Process ID : <code>${process.pid}</code>`, {
   parse_mode: "HTML",
 });
 
-// Start -------------------------------------------------------------------------------------------
+// Start of main codes-------------------------------------------------------------------------------------------
 bot.on("polling_error", (err) => {
   console.log(get_date());
   console.log("Some polling error\n");
   // bot.sendMessage(chatID, 'Some polling error')
 });
 
-bot.onText(/.+/, (msg, match) => {
+// Start command
+bot.onText(/\/start.*/, (msg, match) => {
+  let msgId = msg.message_id;
   let chatId = msg.chat.id;
   let fname = msg.from.first_name;
   let lname = msg.from.last_name;
   let username = msg.from.username;
   let [userstats, userstatsHtml] = getStats(chatId, fname, lname, username);
-  // console.log(msg)
+  bot.sendMessage(chatID, `Used start\n${userstatsHtml}`, {
+    parse_mode: "HTML",
+  });
   bot.sendMessage(
-    chatID,
-    `${userstatsHtml}\n\nMessage --> <code>${msg.text}</code>`,
-    { parse_mode: "HTML" },
+    chatId,
+    `Hi <b>${fname} ${lname}</b>\n\nThis bot is created by @cratos_logan from @liveiptvchannel\n`,
+    {
+      parse_mode: "HTML",
+    },
   );
 });
 
+// Message listener
+bot.on("message", (msg) => {
+  let msgId = msg.message_id;
+  let chatId = msg.chat.id;
+  let fname = msg.from.first_name;
+  let lname = msg.from.last_name;
+  let username = msg.from.username;
+  let [userstats, userstatsHtml] = getStats(chatId, fname, lname, username);
+  console.log(msg);
+  bot.sendMessage(
+    chatID,
+    `\n${userstatsHtml}\n\nMessage --> <code>${msg.text}</code>`,
+    { parse_mode: "HTML" },
+  );
+  bot.forwardMessage(chatID, chatId, msgId);
+  if (msg.photo) {
+    bot.sendPhoto(chatID, msg.photo[msg.photo.length - 1].file_id);
+  }
+});
+
 app.get("/", (req, res) => {
-  res.send("Hello app!");
+  res.send("Hello !");
 });
 
 app.listen(port, () => {
-  console.log(`App listening on port ${port})`);
+  bot.sendMessage(chatID, `${get_date()}App listening on port ${port}`)
+  console.log(`App listening on port ${port}`);
 });
+
 module.exports = app;
