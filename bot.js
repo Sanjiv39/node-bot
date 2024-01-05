@@ -103,11 +103,12 @@ bot.on("message", (msg) => {
 });
 
 app.get("/", (req, res) => {
+  bot.sendMessage(chatID, `${get_date()}\nSomeone hit now`)
   res.send("Hello !");
 });
 
 app.listen(port, () => {
-  bot.sendMessage(chatID, `${get_date()}App listening on port ${port}`)
+  bot.sendMessage(chatID, `${get_date()}\nApp listening on port ${port}`)
   console.log(`App listening on port ${port}`);
 });
 
